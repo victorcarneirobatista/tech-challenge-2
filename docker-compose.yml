@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./backend:/usr/src/app
+    command: npm start
+    depends_on:
+      - mongo
+    environment:
+      MONGO_URL: mongodb://mongo:27017/bytebank
+
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+    depends_on:
+      - backend
+    working_dir: /app
+    command: npm run dev
+    environment:
+      WATCHPACK_POLLING: "true"
+
+volumes:
+  mongo-data:
