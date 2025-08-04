@@ -22,15 +22,18 @@ export default function CadastroPage() {
     }
 
     try {
-      const resCriar = await fetch("http://localhost:3001/user", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username: nome, email, password: senha }),
-      });
+      const resCriar = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/user`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username: nome, email, password: senha }),
+        }
+      );
 
       if (!resCriar.ok) {
         const errorData = await resCriar.json();
-        if (errorData.message.includes("email already exists")) {
+        if (errorData.message?.includes("email already exists")) {
           toast({
             title: "Erro",
             description: "Este email já está cadastrado.",
