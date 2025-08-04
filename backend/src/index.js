@@ -49,9 +49,10 @@ app.use(routes)
 
 // Conexão com MongoDB e start do servidor
 connectDB().then(() => {
-    app.listen(3001, '0.0.0.0', () => {
-        console.log('Servidor rodando na porta 3001')
-    })
+        const port = process.env.PORT || 3001;
+    app.listen(port, '0.0.0.0', () => {
+        console.log(`Servidor rodando na porta ${port}`);
+    });
 })
 
 module.exports = app
