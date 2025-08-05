@@ -54,49 +54,11 @@ export default function EditarTransacaoModal({ transacao }: Props) {
     setValor(formatado);
   };
 
-const handleEditar = async () => {
-  const token = localStorage.getItem("token");
-  const accountId = localStorage.getItem("contaId");
-
-  if (!token || !accountId) {
-    alert("Token ou conta não encontrados.");
-    return;
-  }
-
-  const valorConvertido = parseFloat(
-    valor.replace("R$", "").replace(/\./g, "").replace(",", ".")
-  );
-
-  const payload = {
-    type: tipo === "Depósito" ? "Credit" : "Debit",
-    value:
-      tipo === "Transferência"
-        ? -Math.abs(valorConvertido)
-        : Math.abs(valorConvertido),
-    date: data?.toISOString().split("T")[0] ?? transacao.data,
-    accountId,
-  };
-
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/account/transaction/${transacao.id}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(payload),
-      }
+  const handleEditar = () => {
+    const valorConvertido = parseFloat(
+      valor.replace("R$", "").replace(/\./g, "").replace(",", ".")
     );
 
-    const result = await response.json();
-    if (!response.ok) {
-      alert(result?.message || "Erro ao editar transação.");
-      return;
-    }
-
-    // Atualiza na store local
     editarTransacao({
       id: transacao.id,
       tipo: tipo === "Depósito" ? "Credit" : "Debit",
@@ -108,10 +70,7 @@ const handleEditar = async () => {
     });
 
     setAberto(false);
-  } catch (error) {
-    alert("Erro inesperado ao editar transação.");
-  }
-};
+  };
 
   return (
     <>
