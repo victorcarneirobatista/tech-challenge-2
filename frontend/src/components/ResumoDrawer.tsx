@@ -49,7 +49,9 @@ export default function ResumoDrawer() {
     transacoesValidas.forEach((t) => {
       const valor = typeof t.valor === "number" ? t.valor : parseFloat(t.valor)
       if (!isNaN(valor)) {
-        totais[t.tipo] += Math.abs(valor)
+        // Converte 'Credit' e 'Debit' para 'Depósito' e 'Transferência'
+        const tipoConvertido = t.tipo === "Credit" ? "Depósito" : t.tipo === "Debit" ? "Transferência" : t.tipo;
+        totais[tipoConvertido] += Math.abs(valor)
       }
     })
 
@@ -165,7 +167,6 @@ export default function ResumoDrawer() {
               </PieChart>
             </ResponsiveContainer>
           </div>
-
 
           {/* Gráfico de Linha */}
           {dadosLinha.length > 0 && (
