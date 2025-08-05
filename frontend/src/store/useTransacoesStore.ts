@@ -1,17 +1,19 @@
 import { create } from "zustand"
 
 type Transacao = {
-  id: string
-  tipo: "Depósito" | "Transferência"
-  valor: number
-  data: string
+  id: string;
+  tipo: "Credit" | "Debit" | "Depósito" | "Transferência";  // Aceita ambos tipos
+  valor: number;
+  data: string;
+  accountId?: string; // Se for necessário
 }
 
 type TransacaoAPI = {
-  id: string
-  tipo: "Credit" | "Debit"
-  valor: number
-  data: string
+  id: string;
+  tipo: "Credit" | "Debit"; // Para a API
+  valor: number;
+  data: string;
+  accountId?: string; // Se necessário
 }
 
 type State = {

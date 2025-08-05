@@ -32,7 +32,7 @@ interface Props {
 
 export default function EditarTransacaoModal({ transacao }: Props) {
   const [aberto, setAberto] = useState(false);
-  const [tipo, setTipo] = useState(transacao.tipo);
+  const [tipo, setTipo] = useState<"Depósito" | "Transferência">(transacao.tipo);
   const [valor, setValor] = useState(
     transacao.valor.toLocaleString("pt-BR", {
       minimumFractionDigits: 2,
@@ -54,11 +54,49 @@ export default function EditarTransacaoModal({ transacao }: Props) {
     setValor(formatado);
   };
 
-  const handleEditar = () => {
-    const valorConvertido = parseFloat(
-      valor.replace("R$", "").replace(/\./g, "").replace(",", ".")
+const handleEditar = async () => {
+  const token = localStorage.getItem("token");
+  const accountId = localStorage.getItem("contaId");
+
+  if (!token || !accountId) {
+    alert("Token ou conta não encontrados.");
+    return;
+  }
+
+  const valorConvertido = parseFloat(
+    valor.replace("R$", "").replace(/\./g, "").replace(",", ".")
+  );
+
+  const payload = {
+    type: tipo === "Depósito" ? "Credit" : "Debit",
+    value:
+      tipo === "Transferência"
+        ? -Math.abs(valorConvertido)
+        : Math.abs(valorConvertido),
+    date: data?.toISOString().split("T")[0] ?? transacao.data,
+    accountId,
+  };
+
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/account/transaction/${transacao.id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      }
     );
 
+    const result = await response.json();
+    if (!response.ok) {
+      alert(result?.message || "Erro ao editar transação.");
+      return;
+    }
+
+    // Atualiza na store local
     editarTransacao({
       id: transacao.id,
       tipo: tipo === "Depósito" ? "Credit" : "Debit",
@@ -70,7 +108,10 @@ export default function EditarTransacaoModal({ transacao }: Props) {
     });
 
     setAberto(false);
-  };
+  } catch (error) {
+    alert("Erro inesperado ao editar transação.");
+  }
+};
 
   return (
     <>
@@ -94,7 +135,7 @@ export default function EditarTransacaoModal({ transacao }: Props) {
             <h2 className="text-lg font-semibold mb-4">Editar Transação</h2>
 
             {/* Tipo */}
-            <Select value={tipo} onValueChange={(v) => setTipo(v as any)}>
+            <Select value={tipo} onValueChange={(v) => setTipo(v as "Depósito" | "Transferência")}>
               <SelectTrigger className="mb-3">
                 <SelectValue placeholder="Tipo" />
               </SelectTrigger>

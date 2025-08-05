@@ -154,8 +154,8 @@ export default function TransacaoForm({
 
       setTransacoes([...transacoes, novaFormatada]);
       adicionarTransacao({
-        id,
-        tipo: nova.type,
+        id: nova._id, // Use o id da resposta da API
+        tipo: nova.type === "Credit" ? "Credit" : "Debit", // Certifique-se de passar "Credit" ou "Debit"
         valor: nova.value,
         data: nova.date,
       });
