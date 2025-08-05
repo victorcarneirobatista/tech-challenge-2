@@ -72,7 +72,8 @@ export default function Extrato() {
         <div className="pr-1">
           <ul className="flex flex-col gap-3 w-full">
             {transacoesOrdenadas.map((t) => {
-              const tipoConvertido = t.tipo === "Credit" ? "Depósito" : "Transferência";
+              // Conversão de 'Credit' para 'Depósito' e 'Debit' para 'Transferência'
+              const tipoConvertido = t.tipo === "Credit" ? "Depósito" : t.tipo === "Debit" ? "Transferência" : t.tipo;
               const corTexto = Number(t.valor) < 0 ? "text-red-400" : "text-green-400";
 
               return (

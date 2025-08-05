@@ -61,7 +61,7 @@ export default function EditarTransacaoModal({ transacao }: Props) {
 
     editarTransacao({
       id: transacao.id,
-      tipo: tipo === "Depósito" ? "Credit" : "Debit",
+      tipo: tipo === "Depósito" ? "Credit" : "Debit",  // Conversão de 'Depósito' para 'Credit' e 'Transferência' para 'Debit'
       valor:
         tipo === "Transferência"
           ? -Math.abs(valorConvertido)

@@ -106,7 +106,7 @@ export default function TransacaoForm({
     if (valorNumerico <= 0) return alert("Informe um valor válido.");
 
     const novaTransacao = {
-      type: tipo === "Depósito" ? "Credit" : "Debit",
+      type: tipo === "Depósito" ? "Credit" : "Debit",  // Conversão de 'Depósito' para 'Credit' e 'Transferência' para 'Debit'
       value: valorNumerico,
       date: data
         ? new Date(data.getFullYear(), data.getMonth(), data.getDate(), 12, 0, 0)
@@ -143,7 +143,7 @@ export default function TransacaoForm({
       const tipoMapeado =
         nova.type?.toLowerCase?.() === "credit"
           ? "Depósito"
-          : "Transferência";
+          : "Transferência";  // Converte 'Credit' para 'Depósito' e 'Debit' para 'Transferência'
 
       const novaFormatada: Transacao = {
         id,
