@@ -1,5 +1,3 @@
-"use client";
-
 import { useState, useEffect, useRef } from "react";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import EditarTransacaoModal from "./EditarTransacaoModal";
@@ -74,6 +72,7 @@ export default function Extrato() {
         <div className="pr-1">
           <ul className="flex flex-col gap-3 w-full">
             {transacoesOrdenadas.map((t) => {
+              const tipoConvertido = t.tipo === "Credit" ? "Depósito" : "Transferência";
               const corTexto = Number(t.valor) < 0 ? "text-red-400" : "text-green-400";
 
               return (
@@ -90,7 +89,7 @@ export default function Extrato() {
                   </div>
 
                   <div className="flex gap-3 items-center">
-                    <EditarTransacaoModal transacao={t} />
+                    <EditarTransacaoModal transacao={{ ...t, tipo: tipoConvertido }} />
                     <TrashIcon
                       className="h-5 w-5 text-red-400 hover:text-red-600 cursor-pointer"
                       onClick={() => setConfirmarExclusaoId(t.id)}
